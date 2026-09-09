@@ -31,8 +31,10 @@ for index, repo_name in enumerate(df["name"]):
             ).decode("utf-8", errors="ignore")
 
         else:
-            print(f"README not found: {repo_name}")
-            readme_text = ""
+             print(
+              f"Failed: {repo_name} | "
+             f"Status: {response.status_code}")
+             readme_text = ""
 
     except Exception as e:
 
