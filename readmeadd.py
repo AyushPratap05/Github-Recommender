@@ -2,7 +2,18 @@ import requests
 import pandas as pd
 import base64
 import time
+import os
+from dotenv import load_dotenv
 
+
+load_dotenv()
+
+token = os.getenv("GITHUB_TOKEN")
+
+headers = {
+    "Authorization": f"Bearer {token}",
+    "Accept": "application/vnd.github+json"
+}
 
 # Load our existing dataset
 df = pd.read_csv("Data/repositories.csv")
@@ -11,14 +22,21 @@ df = pd.read_csv("Data/repositories.csv")
 readmes = []
 
 
-for index, repo_name in enumerate(df["name"]):
+for index, row in df.iterrows():
+
+    repo_name = row["name"]
+
+    # README already exists
+    if pd.notna(row["readme"]) and row["readme"] != "":
+        print(f"{index + 1}/{len(df)} - Already have README: {repo_name}")
+        continue
 
     print(f"{index + 1}/{len(df)} - {repo_name}")
 
     readme_url = f"https://api.github.com/repos/{repo_name}/readme"
 
     try:
-        response = requests.get(readme_url)
+        response = requests.get(readme_url, headers=headers)
 
         if response.status_code == 200:
 
