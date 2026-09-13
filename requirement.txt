@@ -1,3 +1,5 @@
 Pandas
 Jupyter
 requests
+scikit learn
+sentence-transformer
